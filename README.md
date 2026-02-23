@@ -13,6 +13,7 @@ Copy this directory into `addons/@aviorstudio_gd-responsive/` and enable the plu
 ## API Reference
 
 - `ResponsiveScaleModule`: responsive scaling, breakpoints, margins, and content width helpers.
+- `ResponsiveLayout`: reusable base `Control` + scene for responsive pages.
 
 ## Status
 
