@@ -14,10 +14,11 @@ Copy this directory into `addons/@aviorstudio_gd-responsive/` and enable the plu
 
 - `ResponsiveScaleModule`: responsive scaling, breakpoints, margins, and content width helpers.
 - `ResponsiveLayout`: reusable base `Control` + scene for responsive pages.
+- `GdResponsiveAutoload`: optional autoload facade for layout scale/update/apply flows.
 
-## Status
+## Testing
 
-Scaffolded in Phase 3 with module implementation. Base layout/autoload/tests are added in subsequent steps.
+`./tests/test.sh`
 
 ## License
 
