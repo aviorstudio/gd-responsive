@@ -2,7 +2,7 @@
 class_name ResponsiveLayout
 extends Control
 
-const ResponsiveScaleModule = preload("res://src/responsive_scale_module.gd")
+const ResponsiveScaleModule = preload("responsive_scale_module.gd")
 
 ## Maximum content width constraint.
 @export var max_content_width: float = 480.0

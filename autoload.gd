@@ -2,8 +2,8 @@
 class_name GdResponsiveAutoload
 extends Node
 
-const ResponsiveScaleModule = preload("res://src/responsive_scale_module.gd")
-const ResponsiveLayout = preload("res://src/responsive_layout.gd")
+const ResponsiveScaleModule = preload("src/responsive_scale_module.gd")
+const ResponsiveLayout = preload("src/responsive_layout.gd")
 
 var _scale_module: ResponsiveScaleModule = ResponsiveScaleModule.new()
 
