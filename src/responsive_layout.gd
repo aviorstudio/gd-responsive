@@ -10,6 +10,14 @@ const ResponsiveScaleModule = preload("responsive_scale_module.gd")
 @export var min_content_width: float = 320.0
 ## Enables recursive font size scaling.
 @export var adjust_font_sizes: bool = true
+## Path to the root ScrollContainer node.
+@export var scroll_path: NodePath = NodePath("ScrollContainer")
+## Path to the MarginContainer node.
+@export var margin_path: NodePath = NodePath("ScrollContainer/MarginContainer")
+## Path to the CenterContainer node.
+@export var center_path: NodePath = NodePath("ScrollContainer/MarginContainer/CenterContainer")
+## Path to the content VBoxContainer node.
+@export var content_path: NodePath = NodePath("ScrollContainer/MarginContainer/CenterContainer/VBoxContainer")
 
 ## Baseline layout width for scale calculations.
 @export var base_width: float = 720.0
@@ -32,15 +40,19 @@ const ResponsiveScaleModule = preload("responsive_scale_module.gd")
 ## Current responsive scale.
 var current_scale: float = 1.0
 
-@onready var scroll_container: ScrollContainer = $ScrollContainer
-@onready var margin_container: MarginContainer = $ScrollContainer/MarginContainer
-@onready var center_container: CenterContainer = $ScrollContainer/MarginContainer/CenterContainer
-@onready var content_container: VBoxContainer = $ScrollContainer/MarginContainer/CenterContainer/VBoxContainer
+var scroll_container: ScrollContainer = null
+var margin_container: MarginContainer = null
+var center_container: CenterContainer = null
+var content_container: VBoxContainer = null
 
 var _scale_module: ResponsiveScaleModule = ResponsiveScaleModule.new()
 var _last_viewport_size: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	_resolve_layout_nodes()
+	if scroll_container == null or margin_container == null or center_container == null or content_container == null:
+		push_error("ResponsiveLayout: invalid layout paths configuration")
+		return
 	_apply_runtime_config()
 	scroll_container.clip_contents = true
 	scroll_container.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -54,6 +66,12 @@ func _ready() -> void:
 	if get_viewport() != null:
 		get_viewport().size_changed.connect(_on_viewport_size_changed)
 	call_deferred("_apply_viewport_size")
+
+func _resolve_layout_nodes() -> void:
+	scroll_container = get_node_or_null(scroll_path) as ScrollContainer
+	margin_container = get_node_or_null(margin_path) as MarginContainer
+	center_container = get_node_or_null(center_path) as CenterContainer
+	content_container = get_node_or_null(content_path) as VBoxContainer
 
 func _on_viewport_size_changed() -> void:
 	var viewport_size: Vector2 = get_viewport().size if get_viewport() else Vector2.ZERO
