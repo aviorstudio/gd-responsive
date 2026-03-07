@@ -8,8 +8,8 @@ const ResponsiveScaleModule = preload("responsive_scale_module.gd")
 @export var max_content_width: float = 480.0
 ## Minimum content width constraint.
 @export var min_content_width: float = 320.0
-## Enables recursive font size scaling.
-@export var adjust_font_sizes: bool = true
+## Enables recursive font size scaling (can be expensive for large trees).
+@export var adjust_font_sizes: bool = false
 ## Path to the root ScrollContainer node.
 @export var scroll_path: NodePath = NodePath("ScrollContainer")
 ## Path to the MarginContainer node.
@@ -139,7 +139,7 @@ func _apply_responsive_sizing() -> void:
 		font_scale = 0.95
 	elif device_type == ResponsiveScaleModule.DeviceType.DESKTOP:
 		font_scale = 0.85
-	_scale_module.apply_font_scaling(content_container, base_sizes, current_scale * font_scale)
+	_scale_module.apply_font_scaling_recursive(content_container, base_sizes, current_scale * font_scale)
 
 ## Returns true if current viewport resolves to mobile.
 func is_mobile() -> bool:

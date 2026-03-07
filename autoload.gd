@@ -69,4 +69,4 @@ func apply_responsive_sizing(layout: ResponsiveLayout) -> void:
 		font_scale = 0.95
 	elif device_type == ResponsiveScaleModule.DeviceType.DESKTOP:
 		font_scale = 0.85
-	_scale_module.apply_font_scaling(layout.content_container, base_sizes, layout.current_scale * font_scale)
+	_scale_module.apply_font_scaling_recursive(layout.content_container, base_sizes, layout.current_scale * font_scale)
