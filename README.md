@@ -1,6 +1,8 @@
 # gd-responsive
 
-Game-agnostic responsive scaling and layout helpers for Godot 4.
+Viewport classification and layout-value helpers for Godot 4.
+
+This addon is intentionally a toolkit, not a full page framework.
 
 ## Installation
 
@@ -12,9 +14,21 @@ Copy this directory into `addons/@aviorstudio_gd-responsive/` and enable the plu
 
 ## API Reference
 
-- `ResponsiveScaleModule`: responsive scaling, breakpoints, margins, and content width helpers.
-- `ResponsiveLayout`: reusable base `Control` + scene for responsive pages.
-- `GdResponsiveAutoload`: optional autoload facade for layout scale/update/apply flows.
+- `ResponsiveScaleModule`: viewport classification plus scale/margin/content-width calculations.
+- `ResponsiveLayout`: optional base `Control` scene that applies computed values.
+- `GdResponsiveAutoload`: optional facade for projects that still prefer autoload access.
+
+Font scaling APIs:
+
+- `apply_font_scaling_on_node(...)`: scales one node only.
+- `apply_font_scaling_recursive(...)`: explicit recursive scaling for a subtree.
+
+`ResponsiveLayout.adjust_font_sizes` defaults to `false` so recursive font rewriting is opt-in.
+
+## Scope Boundary
+
+- In scope: compute responsive values and selectively apply them.
+- Out of scope: full page orchestration, route-level lifecycle behavior, and mandatory global mutation.
 
 ## ResponsiveLayout Paths
 

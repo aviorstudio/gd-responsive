@@ -81,10 +81,25 @@ func calculate_content_width(viewport_width: float, margin: int, min_width: floa
 	var available_width: float = viewport_width - float(margin * 2)
 	return clamp(available_width, min_width, max_width)
 
-## Applies responsive font scaling recursively to supported controls.
-func apply_font_scaling(node: Node, base_sizes: Dictionary[String, int], scale: float) -> void:
+## Applies responsive font scaling to a single node without walking children.
+func apply_font_scaling_on_node(node: Node, base_sizes: Dictionary[String, int], scale: float) -> void:
 	if node == null:
 		return
+	_apply_font_scaling_on_node(node, base_sizes, scale)
+
+## Applies responsive font scaling recursively to a node tree.
+func apply_font_scaling_recursive(node: Node, base_sizes: Dictionary[String, int], scale: float) -> void:
+	if node == null:
+		return
+	_apply_font_scaling_on_node(node, base_sizes, scale)
+	for child: Node in node.get_children():
+		apply_font_scaling_recursive(child, base_sizes, scale)
+
+## Backward-compatible alias kept for existing callers.
+func apply_font_scaling(node: Node, base_sizes: Dictionary[String, int], scale: float) -> void:
+	apply_font_scaling_recursive(node, base_sizes, scale)
+
+func _apply_font_scaling_on_node(node: Node, base_sizes: Dictionary[String, int], scale: float) -> void:
 	if node is Button:
 		var button: Button = node
 		if not button.has_theme_font_size_override("font_size"):
@@ -102,5 +117,3 @@ func apply_font_scaling(node: Node, base_sizes: Dictionary[String, int], scale: 
 		var line_edit: LineEdit = node
 		if not line_edit.has_theme_font_size_override("font_size"):
 			line_edit.add_theme_font_size_override("font_size", int(base_sizes.get("body", 24) * scale))
-	for child: Node in node.get_children():
-		apply_font_scaling(child, base_sizes, scale)
