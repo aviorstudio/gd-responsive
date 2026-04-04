@@ -47,6 +47,12 @@ var content_container: VBoxContainer = null
 
 var _scale_module: ResponsiveScaleModule = ResponsiveScaleModule.new()
 var _last_viewport_size: Vector2 = Vector2.ZERO
+var _layout_service: Node = null
+
+## Sets an external layout service to delegate layout computations to.
+## The service must implement calculate_scale(layout), update_layout(layout), apply_responsive_sizing(layout).
+func set_layout_service(service: Node) -> void:
+	_layout_service = service
 
 func _ready() -> void:
 	_resolve_layout_nodes()
@@ -94,10 +100,16 @@ func _apply_viewport_size() -> void:
 	_apply_responsive_sizing()
 
 func _calculate_scale() -> void:
+	if _layout_service and _layout_service.has_method("calculate_scale"):
+		_layout_service.calculate_scale(self)
+		return
 	var viewport_size: Vector2 = get_viewport().size if get_viewport() else Vector2.ZERO
 	current_scale = _scale_module.compute_scale(viewport_size, current_scale)
 
 func _update_layout() -> void:
+	if _layout_service and _layout_service.has_method("update_layout"):
+		_layout_service.update_layout(self)
+		return
 	if not is_inside_tree():
 		return
 	var viewport_size: Vector2 = get_viewport().size if get_viewport() else Vector2.ZERO
@@ -125,6 +137,9 @@ func _update_layout() -> void:
 	content_container.add_theme_constant_override("separation", separation)
 
 func _apply_responsive_sizing() -> void:
+	if _layout_service and _layout_service.has_method("apply_responsive_sizing"):
+		_layout_service.apply_responsive_sizing(self)
+		return
 	if not adjust_font_sizes:
 		return
 	var base_sizes: Dictionary[String, int] = {
