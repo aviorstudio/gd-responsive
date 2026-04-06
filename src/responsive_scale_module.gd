@@ -93,7 +93,8 @@ func apply_font_scaling_recursive(node: Node, base_sizes: Dictionary[String, int
 		return
 	_apply_font_scaling_on_node(node, base_sizes, scale)
 	for child: Node in node.get_children():
-		apply_font_scaling_recursive(child, base_sizes, scale)
+		if child is Button or child is Label or child is LineEdit or child.get_child_count() > 0:
+			apply_font_scaling_recursive(child, base_sizes, scale)
 
 ## Backward-compatible alias kept for existing callers.
 func apply_font_scaling(node: Node, base_sizes: Dictionary[String, int], scale: float) -> void:
