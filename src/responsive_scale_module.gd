@@ -103,18 +103,27 @@ func apply_font_scaling(node: Node, base_sizes: Dictionary[String, int], scale: 
 func _apply_font_scaling_on_node(node: Node, base_sizes: Dictionary[String, int], scale: float) -> void:
 	if node is Button:
 		var button: Button = node
-		if not button.has_theme_font_size_override("font_size"):
-			button.add_theme_font_size_override("font_size", int(base_sizes.get("button", 28) * scale))
+		var target: int = int(base_sizes.get("button", 28) * scale)
+		if button.has_theme_font_size_override("font_size"):
+			if button.get_theme_font_size("font_size") == target:
+				return
+		button.add_theme_font_size_override("font_size", target)
 	if node is Label:
 		var label: Label = node
-		if not label.has_theme_font_size_override("font_size"):
-			var key: String = "body"
-			if label.theme_type_variation == "HeaderLarge":
-				key = "header"
-			elif label.theme_type_variation == "SubHeader":
-				key = "subheader"
-			label.add_theme_font_size_override("font_size", int(base_sizes.get(key, 24) * scale))
+		var key: String = "body"
+		if label.theme_type_variation == "HeaderLarge":
+			key = "header"
+		elif label.theme_type_variation == "SubHeader":
+			key = "subheader"
+		var target: int = int(base_sizes.get(key, 24) * scale)
+		if label.has_theme_font_size_override("font_size"):
+			if label.get_theme_font_size("font_size") == target:
+				return
+		label.add_theme_font_size_override("font_size", target)
 	if node is LineEdit:
 		var line_edit: LineEdit = node
-		if not line_edit.has_theme_font_size_override("font_size"):
-			line_edit.add_theme_font_size_override("font_size", int(base_sizes.get("body", 24) * scale))
+		var target: int = int(base_sizes.get("body", 24) * scale)
+		if line_edit.has_theme_font_size_override("font_size"):
+			if line_edit.get_theme_font_size("font_size") == target:
+				return
+		line_edit.add_theme_font_size_override("font_size", target)
