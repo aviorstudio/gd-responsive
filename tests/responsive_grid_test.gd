@@ -1,6 +1,7 @@
 extends SceneTree
 
 const ResponsiveGrid = preload("res://src/responsive_grid.gd")
+const ResponsiveGridItem = preload("res://src/responsive_grid_item.gd")
 
 var _root: Window = null
 
@@ -17,13 +18,17 @@ func _run() -> void:
 	_test_hidden_children_ignored()
 	_test_minimum_size_reports_zero_width()
 	_test_zero_width_does_not_crash()
+	_test_static_helpers_set_and_get()
+	_test_columns_breakpoints()
+	_test_min_column_width_breakpoints()
+	_test_grid_item_script_duck_typing()
 	quit()
 
 func _make_child(min_size: Vector2, span: int = 1) -> Control:
 	var c: Control = Control.new()
 	c.custom_minimum_size = min_size
 	if span > 1:
-		c.set_meta(ResponsiveGrid.META_COLUMN_SPAN, span)
+		ResponsiveGrid.set_span(c, span)
 	return c
 
 func _mount(grid: ResponsiveGrid, container_size: Vector2) -> void:
@@ -143,6 +148,60 @@ func _test_zero_width_does_not_crash() -> void:
 	grid.size = Vector2(0.0, 0.0)
 	grid.notification(Container.NOTIFICATION_SORT_CHILDREN)
 	_assert(true, "zero-width should not crash")
+	_cleanup(grid)
+
+func _test_static_helpers_set_and_get() -> void:
+	var c: Control = Control.new()
+	_assert(ResponsiveGrid.get_span(c) == 1, "default span is 1")
+	_assert(ResponsiveGrid.get_justify_self(c) == -1, "default justify_self is -1")
+	_assert(ResponsiveGrid.get_align_self(c) == -1, "default align_self is -1")
+	ResponsiveGrid.set_span(c, 3)
+	ResponsiveGrid.set_justify_self(c, ResponsiveGrid.Align.CENTER)
+	ResponsiveGrid.set_align_self(c, ResponsiveGrid.Align.END)
+	_assert(ResponsiveGrid.get_span(c) == 3, "span persists after set_span")
+	_assert(ResponsiveGrid.get_justify_self(c) == int(ResponsiveGrid.Align.CENTER), "justify_self persists")
+	_assert(ResponsiveGrid.get_align_self(c) == int(ResponsiveGrid.Align.END), "align_self persists")
+	# Clamps span < 1 to 1
+	ResponsiveGrid.set_span(c, 0)
+	_assert(ResponsiveGrid.get_span(c) == 1, "span clamped to 1")
+	c.queue_free()
+
+func _test_columns_breakpoints() -> void:
+	var grid := ResponsiveGrid.new()
+	grid.columns = 4
+	grid.columns_breakpoints = { 0: 1, 400: 2, 700: 3 }
+	_assert(grid.resolve_columns(100.0) == 1, "width<400 → 1 column")
+	_assert(grid.resolve_columns(500.0) == 2, "400<=width<700 → 2 columns")
+	_assert(grid.resolve_columns(800.0) == 3, "width>=700 → 3 columns")
+	# Empty breakpoints fall back to columns
+	grid.columns_breakpoints = {}
+	_assert(grid.resolve_columns(100.0) == 4, "empty breakpoints fall back to columns")
+	grid.queue_free()
+
+func _test_min_column_width_breakpoints() -> void:
+	var grid := ResponsiveGrid.new()
+	grid.columns = 0
+	grid.min_column_width = 80.0
+	grid.min_column_width_breakpoints = { 0: 160.0, 800: 80.0 }
+	_assert(grid.resolve_min_column_width(500.0) == 160.0, "width<800 → min_column_width=160")
+	_assert(grid.resolve_min_column_width(1000.0) == 80.0, "width>=800 → min_column_width=80")
+	grid.queue_free()
+
+func _test_grid_item_script_duck_typing() -> void:
+	var grid := ResponsiveGrid.new()
+	grid.columns = 3
+	grid.column_gap = 0.0
+	grid.align_items = ResponsiveGrid.Align.STRETCH
+	grid.justify_items = ResponsiveGrid.Align.STRETCH
+	var spanned := ResponsiveGridItem.new()
+	spanned.custom_minimum_size = Vector2(50, 40)
+	spanned.column_span = 2
+	grid.add_child(spanned)
+	grid.add_child(_make_child(Vector2(50, 40)))
+	grid.add_child(_make_child(Vector2(50, 40)))
+	_mount(grid, Vector2(300, 200))
+	# column_width = 300/3 = 100; spanned = 2*100 = 200
+	_assert(is_equal_approx(spanned.size.x, 200.0), "ResponsiveGridItem.column_span=2 yields width=200, got %f" % spanned.size.x)
 	_cleanup(grid)
 
 func _assert(condition: bool, message: String) -> void:
