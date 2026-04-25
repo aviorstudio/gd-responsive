@@ -43,7 +43,7 @@ var current_scale: float = 1.0
 var scroll_container: ScrollContainer = null
 var margin_container: MarginContainer = null
 var center_container: CenterContainer = null
-var content_container: VBoxContainer = null
+var content_container: Container = null
 
 var _scale_module: ResponsiveScaleModule = ResponsiveScaleModule.new()
 var _last_viewport_size: Vector2 = Vector2.ZERO
@@ -77,7 +77,7 @@ func _resolve_layout_nodes() -> void:
 	scroll_container = get_node_or_null(scroll_path) as ScrollContainer
 	margin_container = get_node_or_null(margin_path) as MarginContainer
 	center_container = get_node_or_null(center_path) as CenterContainer
-	content_container = get_node_or_null(content_path) as VBoxContainer
+	content_container = get_node_or_null(content_path) as Container
 
 func _on_viewport_size_changed() -> void:
 	var viewport_size: Vector2 = get_viewport().size if get_viewport() else Vector2.ZERO
@@ -169,5 +169,5 @@ func is_desktop() -> bool:
 	return _scale_module.resolve_device_type(get_viewport().size) == ResponsiveScaleModule.DeviceType.DESKTOP
 
 ## Returns container where page content should be attached.
-func get_content_container() -> VBoxContainer:
+func get_content_container() -> Container:
 	return content_container
