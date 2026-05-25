@@ -1,7 +1,7 @@
 extends SceneTree
 
-const ResponsiveFlex = preload("res://src/responsive_flex.gd")
-const ResponsiveFlexItem = preload("res://src/responsive_flex_item.gd")
+const ResponsiveFlex = preload("res://addon/src/responsive_flex.gd")
+const ResponsiveFlexItem = preload("res://addon/src/responsive_flex_item.gd")
 
 var _root: Window = null
 

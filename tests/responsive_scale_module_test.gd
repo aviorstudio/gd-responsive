@@ -1,6 +1,6 @@
 extends SceneTree
 
-const ResponsiveScaleModule = preload("res://src/responsive_scale_module.gd")
+const ResponsiveScaleModule = preload("res://addon/src/responsive_scale_module.gd")
 
 func _init() -> void:
 	call_deferred("_run")

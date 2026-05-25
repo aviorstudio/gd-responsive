@@ -1,7 +1,7 @@
 extends SceneTree
 
-const ResponsiveGrid = preload("res://src/responsive_grid.gd")
-const ResponsiveGridItem = preload("res://src/responsive_grid_item.gd")
+const ResponsiveGrid = preload("res://addon/src/responsive_grid.gd")
+const ResponsiveGridItem = preload("res://addon/src/responsive_grid_item.gd")
 
 var _root: Window = null
 
