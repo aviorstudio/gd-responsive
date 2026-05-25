@@ -73,6 +73,11 @@ func _ready() -> void:
 		get_viewport().size_changed.connect(_on_viewport_size_changed)
 	call_deferred("_apply_viewport_size")
 
+func _exit_tree() -> void:
+	var viewport: Viewport = get_viewport()
+	if viewport != null and viewport.size_changed.is_connected(_on_viewport_size_changed):
+		viewport.size_changed.disconnect(_on_viewport_size_changed)
+
 func _resolve_layout_nodes() -> void:
 	scroll_container = get_node_or_null(scroll_path) as ScrollContainer
 	margin_container = get_node_or_null(margin_path) as MarginContainer
