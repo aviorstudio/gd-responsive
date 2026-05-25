@@ -1,59 +1,62 @@
 # gd-responsive
 
-Viewport classification and layout-value helpers for Godot 4.
+Build responsive Godot 4 UI that adapts to phone, tablet, desktop, and web viewports.
 
-This addon is intentionally a toolkit, not a full page framework.
+Use this addon to compute layout scale, margins, content width, breakpoints, flex rows, and grids without hardcoding every screen size.
 
 ## Installation
 
 ### Via gdpm
+
 `gdpm install @aviorstudio/gd-responsive`
 
 ### Manual
-Copy `addon/` into `addons/@aviorstudio_gd-responsive/` and enable the plugin.
 
-## API Reference
+Copy `addon/` into `res://addons/@aviorstudio_gd-responsive/` and enable the plugin.
 
-- `ResponsiveScaleModule`: viewport classification plus scale/margin/content-width calculations.
-- `ResponsiveLayout`: optional base `Control` scene that applies computed values.
-- `ResponsiveFlex` / `ResponsiveFlexItem`: lightweight row/column flow helpers.
-- `ResponsiveGrid` / `ResponsiveGridItem`: breakpoint-aware grid helpers.
-- `GdResponsiveAutoload`: optional facade for projects that still prefer autoload access.
-
-Font scaling APIs:
-
-- `apply_font_scaling_on_node(...)`: scales one node only.
-- `apply_font_scaling_recursive(...)`: explicit recursive scaling for a subtree.
-
-`ResponsiveLayout.adjust_font_sizes` defaults to `false` so recursive font rewriting is opt-in.
-
-## Scope Boundary
-
-- In scope: compute responsive values and selectively apply them.
-- Out of scope: full page orchestration, route-level lifecycle behavior, and mandatory global mutation.
-
-## Gameplay HUD Example
-
-Use `ResponsiveScaleModule` directly when a game only needs numbers for a custom HUD:
+## Quick Start
 
 ```gdscript
 const ResponsiveScaleModule = preload("res://addons/@aviorstudio_gd-responsive/src/responsive_scale_module.gd")
 
-var scale_module := ResponsiveScaleModule.new()
-var scale := scale_module.compute_scale(get_viewport_rect().size, 1.0)
-var margin := scale_module.resolve_margin(scale_module.resolve_device_type(get_viewport_rect().size), false)
+var responsive := ResponsiveScaleModule.new()
+var viewport_size := get_viewport_rect().size
+var device_type := responsive.resolve_device_type(viewport_size)
+var scale := responsive.compute_scale(viewport_size, 1.0)
+var margin := responsive.resolve_margin(device_type, false)
 ```
 
-## ResponsiveLayout Paths
+## Responsive Layout Scene
 
-`ResponsiveLayout` supports configurable hierarchy paths via exported `NodePath` properties:
+Use `ResponsiveLayout` when you want a reusable `Control` base that applies computed margins, content widths, and optional font scaling.
 
-- `scroll_path` (default: `ScrollContainer`)
-- `margin_path` (default: `ScrollContainer/MarginContainer`)
-- `center_path` (default: `ScrollContainer/MarginContainer/CenterContainer`)
-- `content_path` (default: `ScrollContainer/MarginContainer/CenterContainer/VBoxContainer`)
+Configurable child paths:
 
-Defaults match the existing scene structure so current layouts work unchanged.
+- `scroll_path`, default `ScrollContainer`
+- `margin_path`, default `ScrollContainer/MarginContainer`
+- `center_path`, default `ScrollContainer/MarginContainer/CenterContainer`
+- `content_path`, default `ScrollContainer/MarginContainer/CenterContainer/VBoxContainer`
+
+`ResponsiveLayout.adjust_font_sizes` defaults to `false`; enable it only when you want recursive font rewriting.
+
+## What You Get
+
+- `ResponsiveScaleModule`: viewport classification and scale/margin/content-width calculations.
+- `ResponsiveLayout`: reusable base layout scene/script.
+- `ResponsiveFlex` / `ResponsiveFlexItem`: row and column flow helpers.
+- `ResponsiveGrid` / `ResponsiveGridItem`: breakpoint-aware grid helpers.
+- `GdResponsiveAutoload`: optional facade for global access.
+
+## Font Scaling
+
+- `apply_font_scaling_on_node(...)`: scale one node.
+- `apply_font_scaling_recursive(...)`: scale a subtree explicitly.
+
+## Notes
+
+- Works in Godot 4.x native and web exports.
+- You can use only the scale module if you already have custom UI containers.
+- Route, page, and HUD composition stay in your game project.
 
 ## Testing
 

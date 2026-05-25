@@ -1,8 +1,6 @@
 # Changelog
 
-## [0.1.0] - 2026-02-22
-
-### Added
+## 0.0.1
 - Initial addon scaffolding.
 - `responsive_scale_module` with scale, breakpoints, and layout sizing helpers.
 - `responsive_layout` reusable base script and scene.
