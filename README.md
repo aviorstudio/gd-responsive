@@ -10,7 +10,7 @@ This addon is intentionally a toolkit, not a full page framework.
 `gdpm install @aviorstudio/gd-responsive`
 
 ### Manual
-Copy this directory into `addons/@aviorstudio_gd-responsive/` and enable the plugin.
+Copy `addon/` into `addons/@aviorstudio_gd-responsive/` and enable the plugin.
 
 ## API Reference
 
