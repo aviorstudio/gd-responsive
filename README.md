@@ -6,9 +6,9 @@ Use this addon to compute layout scale, margins, content width, breakpoints, fle
 
 ## Installation
 
-### Via gdpm
+### Via gdam
 
-`gdpm install @aviorstudio/gd-responsive`
+`gdam install @aviorstudio/gd-responsive`
 
 ### Manual
 
