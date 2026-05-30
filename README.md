@@ -58,9 +58,28 @@ Configurable child paths:
 - You can use only the scale module if you already have custom UI containers.
 - Route, page, and HUD composition stay in your game project.
 
+## Repository Layout
+
+- `addon/`: Godot plugin source packaged for GDAM and manual installation.
+- `addon/plugin.cfg`: plugin name, version, description, and entry script.
+- `addon/src/`: reusable GDScript modules.
+- `tests/`: Godot test project/scripts for addon behavior.
+- `.github/workflows/ci.yml`: validates package shape and runs tests.
+- `.github/workflows/release.yml`: creates GitHub release ZIPs and publishes to GDAM.
+
+## Versioning And Releases
+
+The version in `addon/plugin.cfg` is the addon package version. Releases are created from `main` with the manual release workflow and plain semver tags like `v0.0.1`; the workflow verifies `plugin.cfg`, builds `@aviorstudio_gd-responsive.zip`, and publishes `@aviorstudio/gd-responsive` to GDAM.
+
 ## Testing
 
-`./tests/test.sh`
+Run locally with:
+
+```sh
+./tests/test.sh
+```
+
+CI runs the same test script when available.
 
 ## License
 
