@@ -11,6 +11,7 @@ func _init() -> void:
 func _run() -> void:
 	_root = root
 	_test_config_resource_maps_to_scale_config()
+	_test_layout_reports_missing_paths()
 	_test_layout_uses_resource_config()
 	quit()
 
@@ -51,6 +52,15 @@ func _test_config_resource_maps_to_scale_config() -> void:
 	_assert(scale_config.mobile_margin == 12, "config maps mobile margin")
 	_assert(scale_config.desktop_margin == 40, "config maps desktop margin")
 	_assert(scale_config.content_separation_desktop == 18, "config maps desktop separation")
+
+func _test_layout_reports_missing_paths() -> void:
+	var layout: ResponsiveLayout = ResponsiveLayout.new()
+	_root.add_child(layout)
+	await process_frame
+	var warnings: PackedStringArray = layout._get_configuration_warnings()
+	_assert(warnings.size() == 4, "missing default child paths produce four warnings")
+	_assert(str(warnings[0]).contains("scroll_path"), "first warning names scroll_path")
+	layout.queue_free()
 
 func _test_layout_uses_resource_config() -> void:
 	_root.size = Vector2i(900, 1400)
