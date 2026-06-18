@@ -30,6 +30,18 @@ var margin := responsive.resolve_margin(device_type, false)
 
 Use `ResponsiveLayout` when you want a reusable `Control` base that applies computed margins, content widths, and optional font scaling.
 
+`ResponsiveLayout` is editor-first: it runs as a `@tool` script, so margin, content width, and spacing changes are visible while authoring scenes. Instance `res://addons/@aviorstudio_gd-responsive/src/responsive_layout.tscn`, then tune or duplicate its `layout_config` resource in the inspector.
+
+The bundled default config lives at:
+
+`res://addons/@aviorstudio_gd-responsive/config/default_responsive_layout_config.tres`
+
+Useful editor-facing fields:
+
+- `layout_config`: reusable `.tres` settings for widths, margins, scale, breakpoints, spacing, and base font sizes.
+- `editor_preview_enabled`: enables live editor layout preview.
+- `editor_preview_viewport_size`: optional phone/tablet/desktop preview size override. Leave at zero to use the control size.
+
 Configurable child paths:
 
 - `scroll_path`, default `ScrollContainer`
@@ -42,6 +54,7 @@ Configurable child paths:
 ## What You Get
 
 - `ResponsiveScaleModule`: viewport classification and scale/margin/content-width calculations.
+- `ResponsiveLayoutConfig`: reusable artist-authored layout config resource.
 - `ResponsiveLayout`: reusable base layout scene/script.
 - `ResponsiveFlex` / `ResponsiveFlexItem`: row and column flow helpers.
 - `ResponsiveGrid` / `ResponsiveGridItem`: breakpoint-aware grid helpers.

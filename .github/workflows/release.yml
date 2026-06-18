@@ -74,6 +74,7 @@ jobs:
           cp addon/plugin.cfg addon/plugin.gd "$package_root/"
           cp addon/*.uid "$package_root/" 2>/dev/null || true
           if [ -f addon/autoload.gd ]; then cp addon/autoload.gd "$package_root/"; fi
+          if [ -d addon/config ]; then cp -R addon/config "$package_root/"; fi
           if [ -d addon/src ]; then cp -R addon/src "$package_root/"; fi
           (cd "$package_root" && zip -r "../${addon_dir}.zip" .)
 
