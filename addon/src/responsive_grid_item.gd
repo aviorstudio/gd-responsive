@@ -12,7 +12,7 @@
 class_name ResponsiveGridItem
 extends Control
 
-const _GRID = preload("res://addon/src/responsive_grid.gd")
+const _GRID = preload("responsive_grid.gd")
 
 ## Number of columns this cell occupies (>= 1).
 @export_range(1, 32) var column_span: int = 1:
