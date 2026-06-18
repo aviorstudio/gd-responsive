@@ -34,6 +34,7 @@ const ResponsiveLayoutConfig = preload("responsive_layout_config.gd")
 			layout_config.changed.connect(_on_layout_config_changed)
 		_apply_runtime_config()
 		_queue_apply_viewport_size()
+		update_configuration_warnings()
 
 @export_group("Layout")
 
@@ -44,13 +45,25 @@ const ResponsiveLayoutConfig = preload("responsive_layout_config.gd")
 ## Enables recursive font size scaling (can be expensive for large trees).
 @export var adjust_font_sizes: bool = false
 ## Path to the root ScrollContainer node.
-@export var scroll_path: NodePath = NodePath("ScrollContainer")
+@export var scroll_path: NodePath = NodePath("ScrollContainer"):
+	set(value):
+		scroll_path = value
+		_on_layout_path_changed()
 ## Path to the MarginContainer node.
-@export var margin_path: NodePath = NodePath("ScrollContainer/MarginContainer")
+@export var margin_path: NodePath = NodePath("ScrollContainer/MarginContainer"):
+	set(value):
+		margin_path = value
+		_on_layout_path_changed()
 ## Path to the CenterContainer node.
-@export var center_path: NodePath = NodePath("ScrollContainer/MarginContainer/CenterContainer")
+@export var center_path: NodePath = NodePath("ScrollContainer/MarginContainer/CenterContainer"):
+	set(value):
+		center_path = value
+		_on_layout_path_changed()
 ## Path to the content VBoxContainer node.
-@export var content_path: NodePath = NodePath("ScrollContainer/MarginContainer/CenterContainer/VBoxContainer")
+@export var content_path: NodePath = NodePath("ScrollContainer/MarginContainer/CenterContainer/VBoxContainer"):
+	set(value):
+		content_path = value
+		_on_layout_path_changed()
 
 ## Baseline layout width for scale calculations.
 @export var base_width: float = 720.0
@@ -91,7 +104,8 @@ func set_layout_service(service: Node) -> void:
 func _ready() -> void:
 	_resolve_layout_nodes()
 	if scroll_container == null or margin_container == null or center_container == null or content_container == null:
-		push_error("ResponsiveLayout: invalid layout paths configuration")
+		push_warning("ResponsiveLayout: invalid layout paths configuration")
+		update_configuration_warnings()
 		return
 	if layout_config != null and not layout_config.changed.is_connected(_on_layout_config_changed):
 		layout_config.changed.connect(_on_layout_config_changed)
@@ -110,6 +124,7 @@ func _ready() -> void:
 	if not resized.is_connected(_on_control_resized):
 		resized.connect(_on_control_resized)
 	call_deferred("_apply_viewport_size")
+	update_configuration_warnings()
 
 func _exit_tree() -> void:
 	var viewport: Viewport = get_viewport()
@@ -126,6 +141,28 @@ func _resolve_layout_nodes() -> void:
 	center_container = get_node_or_null(center_path) as CenterContainer
 	content_container = get_node_or_null(content_path) as Container
 
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings: PackedStringArray = PackedStringArray()
+	if not is_inside_tree():
+		return warnings
+	if get_node_or_null(scroll_path) == null:
+		warnings.append("ResponsiveLayout cannot find scroll_path: %s" % scroll_path)
+	elif not get_node_or_null(scroll_path) is ScrollContainer:
+		warnings.append("ResponsiveLayout scroll_path must point to a ScrollContainer: %s" % scroll_path)
+	if get_node_or_null(margin_path) == null:
+		warnings.append("ResponsiveLayout cannot find margin_path: %s" % margin_path)
+	elif not get_node_or_null(margin_path) is MarginContainer:
+		warnings.append("ResponsiveLayout margin_path must point to a MarginContainer: %s" % margin_path)
+	if get_node_or_null(center_path) == null:
+		warnings.append("ResponsiveLayout cannot find center_path: %s" % center_path)
+	elif not get_node_or_null(center_path) is CenterContainer:
+		warnings.append("ResponsiveLayout center_path must point to a CenterContainer: %s" % center_path)
+	if get_node_or_null(content_path) == null:
+		warnings.append("ResponsiveLayout cannot find content_path: %s" % content_path)
+	elif not get_node_or_null(content_path) is Container:
+		warnings.append("ResponsiveLayout content_path must point to a Container: %s" % content_path)
+	return warnings
+
 func _on_viewport_size_changed() -> void:
 	var viewport_size: Vector2 = _resolve_viewport_size()
 	if viewport_size == _last_viewport_size:
@@ -139,6 +176,11 @@ func _on_control_resized() -> void:
 
 func _on_layout_config_changed() -> void:
 	_apply_runtime_config()
+	_queue_apply_viewport_size()
+
+func _on_layout_path_changed() -> void:
+	_resolve_layout_nodes()
+	update_configuration_warnings()
 	_queue_apply_viewport_size()
 
 ## Re-applies responsive sizing after external code changes child content or config.
@@ -216,9 +258,6 @@ func _update_layout() -> void:
 	)
 	content_container.custom_minimum_size.x = content_width
 	content_container.custom_minimum_size.y = 0.0
-	for child: Node in content_container.get_children():
-		if child is Control:
-			(child as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var separation: int = _scale_module.get_config().content_separation_mobile
 	if device_type != ResponsiveScaleModule.DeviceType.MOBILE:
 		separation = _scale_module.get_config().content_separation_desktop

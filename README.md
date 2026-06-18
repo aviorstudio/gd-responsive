@@ -42,6 +42,8 @@ Useful editor-facing fields:
 - `editor_preview_enabled`: enables live editor layout preview.
 - `editor_preview_viewport_size`: optional phone/tablet/desktop preview size override. Leave at zero to use the control size.
 
+If one of the configured child paths is missing or points at the wrong node type, `ResponsiveLayout` reports a Godot node configuration warning in the Scene dock.
+
 Configurable child paths:
 
 - `scroll_path`, default `ScrollContainer`
