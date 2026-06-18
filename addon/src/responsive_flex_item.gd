@@ -11,7 +11,7 @@
 class_name ResponsiveFlexItem
 extends Control
 
-const _FLEX = preload("res://addon/src/responsive_flex.gd")
+const _FLEX = preload("responsive_flex.gd")
 
 ## Share of remaining main-axis space (>= 0). 0 = no grow.
 @export var flex_grow: int = 0:
