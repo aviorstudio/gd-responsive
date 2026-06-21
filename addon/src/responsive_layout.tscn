@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://addons/@aviorstudio_gd-responsive/src/responsive_layout.gd" id="1_script"]
-[ext_resource type="Resource" path="res://addons/@aviorstudio_gd-responsive/config/default_responsive_layout_config.tres" id="2_config"]
+[ext_resource type="Script" path="responsive_layout.gd" id="1_script"]
+[ext_resource type="Resource" path="../config/default_responsive_layout_config.tres" id="2_config"]
 
 [node name="ResponsiveLayout" type="Control"]
 layout_mode = 3

@@ -2,11 +2,15 @@
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
-GODOT="${GODOT_BIN:-godot}"
+if [ -n "${GODOT_CMD:-}" ]; then
+    read -r -a GODOT <<< "$GODOT_CMD"
+else
+    GODOT=("${GODOT_BIN:-godot}")
+fi
 FAILURES=0
 for test in "$SCRIPT_DIR"/*_test.gd; do
     echo "Running $(basename "$test")..."
-    if ! "$GODOT" --headless --path "$ROOT_DIR" --script "$test" 2>&1; then
+    if ! "${GODOT[@]}" --headless --path "$ROOT_DIR" --script "$test" 2>&1; then
         FAILURES=$((FAILURES + 1))
     fi
 done

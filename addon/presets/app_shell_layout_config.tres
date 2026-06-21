@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ResponsiveLayoutConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="../src/responsive_layout_config.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+max_content_width = 960.0
+min_content_width = 320.0
+content_separation_mobile = 20
+content_separation_desktop = 32
+mobile_breakpoint = 720
+tablet_breakpoint = 1100
+mobile_margin = 20
+desktop_margin = 56
+landscape_margin = 40
+button_font_size = 26
+body_font_size = 22
+header_font_size = 34
+subheader_font_size = 28
