@@ -14,6 +14,15 @@ Use this addon to compute layout scale, margins, content width, breakpoints, fle
 
 Copy `addon/` into `res://addons/@aviorstudio_gd-responsive/` and enable the plugin.
 
+Enabling the plugin adds the `GdResponsive` autoload and registers these editor-visible types:
+
+- `ResponsiveLayout`
+- `ResponsiveFlex`
+- `ResponsiveGrid`
+- `ResponsiveFlexItem`
+- `ResponsiveGridItem`
+- `ResponsiveLayoutConfig`
+
 ## Quick Start
 
 ```gdscript
@@ -35,6 +44,15 @@ Use `ResponsiveLayout` when you want a reusable `Control` base that applies comp
 The bundled default config lives at:
 
 `res://addons/@aviorstudio_gd-responsive/config/default_responsive_layout_config.tres`
+
+Bundled presets live under:
+
+- `res://addons/@aviorstudio_gd-responsive/presets/compact_layout_config.tres`
+- `res://addons/@aviorstudio_gd-responsive/presets/app_shell_layout_config.tres`
+
+An inspectable app-shell example scene lives at:
+
+`res://addons/@aviorstudio_gd-responsive/examples/app_shell/responsive_example_main.tscn`
 
 Useful editor-facing fields:
 
