@@ -13,13 +13,15 @@ on:
           - major
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency: release-${{ github.repository }}
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     # Bounded, so a step that hangs fails here rather than sitting until the
     # runner's own timeout hours later.
     timeout-minutes: 20
@@ -74,22 +76,11 @@ jobs:
       - name: Test
         uses: ./.github/actions/test
 
-      - name: Package addon
+      - name: Verify tested package identity
         run: |
           set -euo pipefail
-          test -f addon/plugin.cfg
-          repo_owner="${GITHUB_REPOSITORY%%/*}"
-          addon_dir="@${repo_owner}_${GITHUB_REPOSITORY#*/}"
-          package_root="dist/${addon_dir}"
-          mkdir -p "$package_root"
-          cp addon/plugin.cfg addon/plugin.gd "$package_root/"
-          cp addon/*.uid "$package_root/" 2>/dev/null || true
-          if [ -f addon/autoload.gd ]; then cp addon/autoload.gd "$package_root/"; fi
-          if [ -d addon/config ]; then cp -R addon/config "$package_root/"; fi
-          if [ -d addon/src ]; then cp -R addon/src "$package_root/"; fi
-          if [ -d addon/presets ]; then cp -R addon/presets "$package_root/"; fi
-          if [ -d addon/examples ]; then cp -R addon/examples "$package_root/"; fi
-          (cd "$package_root" && zip -r "../${addon_dir}.zip" .)
+          ./scripts/verify_package.sh
+          sha256sum dist/@aviorstudio_gd-responsive.zip
 
       - name: Create GitHub Release
         env:
@@ -98,10 +89,12 @@ jobs:
         run: gh release create "$TAG" dist/*.zip --target "$GITHUB_SHA" --title "$TAG" --notes "Release $TAG"
 
       - name: Install GDAM
-        uses: aviorstudio/gdam-actions/install@v0.0.2
+        uses: aviorstudio/gdam-actions/install@d735444eb470194585def44521d5d91df2260e63 # v0.0.2
+        with:
+          version: v0.0.8
 
       - name: Publish to GDAM
-        uses: aviorstudio/gdam-actions/publish@v0.0.2
+        uses: aviorstudio/gdam-actions/publish@d735444eb470194585def44521d5d91df2260e63 # v0.0.2
         with:
           version: ${{ steps.release.outputs.version }}
           tag: ${{ steps.release.outputs.tag }}
