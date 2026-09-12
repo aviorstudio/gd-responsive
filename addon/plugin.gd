@@ -9,10 +9,14 @@ const ResponsiveGridScript = preload("src/responsive_grid.gd")
 const ResponsiveFlexItemScript = preload("src/responsive_flex_item.gd")
 const ResponsiveGridItemScript = preload("src/responsive_grid_item.gd")
 const ResponsiveLayoutConfigScript = preload("src/responsive_layout_config.gd")
+const ResponsiveLayoutConfigInspectorScript = preload("src/responsive_layout_config_inspector.gd")
 
 var _added_autoload: bool = false
+var _config_inspector: EditorInspectorPlugin = null
 
 func _enter_tree() -> void:
+	_config_inspector = ResponsiveLayoutConfigInspectorScript.new()
+	add_inspector_plugin(_config_inspector)
 	add_custom_type("ResponsiveLayout", "Control", ResponsiveLayoutScript, _editor_icon("Control", "Control"))
 	add_custom_type("ResponsiveFlex", "Container", ResponsiveFlexScript, _editor_icon("HBoxContainer", "Container"))
 	add_custom_type("ResponsiveGrid", "Container", ResponsiveGridScript, _editor_icon("GridContainer", "Container"))
@@ -21,6 +25,9 @@ func _enter_tree() -> void:
 	add_custom_type("ResponsiveLayoutConfig", "Resource", ResponsiveLayoutConfigScript, _editor_icon("Resource", "Resource"))
 
 func _exit_tree() -> void:
+	if _config_inspector != null:
+		remove_inspector_plugin(_config_inspector)
+		_config_inspector = null
 	remove_custom_type("ResponsiveLayoutConfig")
 	remove_custom_type("ResponsiveGridItem")
 	remove_custom_type("ResponsiveFlexItem")

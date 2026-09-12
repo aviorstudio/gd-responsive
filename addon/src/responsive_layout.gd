@@ -145,6 +145,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = PackedStringArray()
 	if not is_inside_tree():
 		return warnings
+	if layout_config != null:
+		for warning in layout_config.get_validation_warnings():
+			warnings.append("ResponsiveLayout config: %s" % warning)
 	if get_node_or_null(scroll_path) == null:
 		warnings.append("ResponsiveLayout cannot find scroll_path: %s" % scroll_path)
 	elif not get_node_or_null(scroll_path) is ScrollContainer:
@@ -177,6 +180,7 @@ func _on_control_resized() -> void:
 func _on_layout_config_changed() -> void:
 	_apply_runtime_config()
 	_queue_apply_viewport_size()
+	update_configuration_warnings()
 
 func _on_layout_path_changed() -> void:
 	_resolve_layout_nodes()

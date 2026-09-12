@@ -60,6 +60,12 @@ Useful editor-facing fields:
 - `editor_preview_enabled`: enables live editor layout preview.
 - `editor_preview_viewport_size`: optional phone/tablet/desktop preview size override. Leave at zero to use the control size.
 
+`ResponsiveLayoutConfig` reports cross-field warnings when minimum content
+width exceeds maximum content width, minimum scale exceeds maximum scale, or
+the mobile breakpoint is not below the tablet breakpoint. Invalid live edits
+and saved resources keep the artist-authored numbers unchanged; correct the
+highlighted fields to clear the warning.
+
 If one of the configured child paths is missing or points at the wrong node type, `ResponsiveLayout` reports a Godot node configuration warning in the Scene dock.
 
 Configurable child paths:
