@@ -50,8 +50,12 @@ func _autoload_setting_matches_plugin() -> bool:
 	var key: String = "autoload/" + AUTOLOAD_NAME
 	if not ProjectSettings.has_setting(key):
 		return false
-	var value: String = str(ProjectSettings.get_setting(key))
-	return value.trim_prefix("*") == _autoload_path()
+	var value: String = str(ProjectSettings.get_setting(key)).trim_prefix("*")
+	if value.begins_with("uid://"):
+		var uid: int = ResourceUID.text_to_id(value)
+		if uid != ResourceUID.INVALID_ID:
+			value = ResourceUID.get_id_path(uid)
+	return value == _autoload_path()
 
 func _editor_icon(preferred_name: String, fallback_name: String) -> Texture2D:
 	var editor_interface: EditorInterface = get_editor_interface()

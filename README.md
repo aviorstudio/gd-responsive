@@ -106,13 +106,22 @@ The version in `addon/plugin.cfg` is the addon package version. Releases are cre
 
 ## Testing
 
+**Correction (fieldsofrevik#151):** the former statement that CI ran the
+test script "when available" overstated the gate: a missing script could skip
+the suite, Godot error output could still exit zero, and releases rebuilt an
+untested ZIP. CI and release now require checksummed Godot 4.7.2, strict
+assertion-reach/error/timeout controls, and the same closed-manifest ZIP bytes
+used by clean install, editor restart, and web-export checks.
+
 Run locally with:
 
 ```sh
 ./tests/test.sh
 ```
 
-CI runs the same test script when available.
+CI and release run this script unconditionally, then build and verify the exact
+release ZIP with `./scripts/package_addon.sh`, `./scripts/verify_package.sh`,
+and `./tests/package_install_test.sh`.
 
 ## License
 

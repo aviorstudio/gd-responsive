@@ -2,8 +2,10 @@ extends SceneTree
 
 const ResponsiveGrid = preload("res://addon/src/responsive_grid.gd")
 const ResponsiveGridItem = preload("res://addon/src/responsive_grid_item.gd")
+const TestHarness = preload("res://tests/test_harness.gd")
 
 var _root: Window = null
+var _test := TestHarness.new()
 
 func _init() -> void:
 	call_deferred("_run")
@@ -22,7 +24,9 @@ func _run() -> void:
 	_test_columns_breakpoints()
 	_test_min_column_width_breakpoints()
 	_test_grid_item_script_duck_typing()
-	quit()
+	await process_frame
+	await process_frame
+	_test.finish(self)
 
 func _make_child(min_size: Vector2, span: int = 1) -> Control:
 	var c: Control = Control.new()
@@ -37,7 +41,7 @@ func _mount(grid: ResponsiveGrid, container_size: Vector2) -> void:
 	grid.notification(Container.NOTIFICATION_SORT_CHILDREN)
 
 func _cleanup(grid: ResponsiveGrid) -> void:
-	grid.queue_free()
+	grid.free()
 
 func _test_auto_fill_column_count() -> void:
 	var grid := ResponsiveGrid.new()
@@ -49,6 +53,7 @@ func _test_auto_fill_column_count() -> void:
 	_assert(grid.compute_column_count(260.0) == 3, "260px auto-fill should produce 3 columns")
 	_assert(grid.compute_column_count(90.0) == 1, "90px auto-fill should produce 1 column")
 	_assert(grid.compute_column_count(1000.0) == 11, "1000px auto-fill should produce 11 columns, got %d" % grid.compute_column_count(1000.0))
+	grid.free()
 
 func _test_fixed_column_count_stretches_cells() -> void:
 	var grid := ResponsiveGrid.new()
@@ -96,7 +101,7 @@ func _test_column_span_meta() -> void:
 	var row2: Control = grid.get_child(2)
 	_assert(is_equal_approx(spanned.size.x, 200.0), "spanned cell is 2 * 100 = 200 wide, got %f" % spanned.size.x)
 	_assert(is_equal_approx(next.position.x, 200.0), "next cell at x=200, got %f" % next.position.x)
-	_assert(next.position.y == row2.position.y - (next.size.y + grid.row_gap) or true, "row2 may wrap")
+	_assert(is_equal_approx(row2.position.y, next.position.y + next.size.y + grid.row_gap), "third item wraps exactly one row below the second")
 	_cleanup(grid)
 
 func _test_align_items_start_keeps_min_height() -> void:
@@ -147,7 +152,7 @@ func _test_zero_width_does_not_crash() -> void:
 	_root.add_child(grid)
 	grid.size = Vector2(0.0, 0.0)
 	grid.notification(Container.NOTIFICATION_SORT_CHILDREN)
-	_assert(true, "zero-width should not crash")
+	_assert(grid.get_child_count() == 1 and is_equal_approx(grid.size.x, 0.0), "zero-width layout returns with its child and width intact")
 	_cleanup(grid)
 
 func _test_static_helpers_set_and_get() -> void:
@@ -164,7 +169,7 @@ func _test_static_helpers_set_and_get() -> void:
 	# Clamps span < 1 to 1
 	ResponsiveGrid.set_span(c, 0)
 	_assert(ResponsiveGrid.get_span(c) == 1, "span clamped to 1")
-	c.queue_free()
+	c.free()
 
 func _test_columns_breakpoints() -> void:
 	var grid := ResponsiveGrid.new()
@@ -176,7 +181,7 @@ func _test_columns_breakpoints() -> void:
 	# Empty breakpoints fall back to columns
 	grid.columns_breakpoints = {}
 	_assert(grid.resolve_columns(100.0) == 4, "empty breakpoints fall back to columns")
-	grid.queue_free()
+	grid.free()
 
 func _test_min_column_width_breakpoints() -> void:
 	var grid := ResponsiveGrid.new()
@@ -185,7 +190,7 @@ func _test_min_column_width_breakpoints() -> void:
 	grid.min_column_width_breakpoints = { 0: 160.0, 800: 80.0 }
 	_assert(grid.resolve_min_column_width(500.0) == 160.0, "width<800 → min_column_width=160")
 	_assert(grid.resolve_min_column_width(1000.0) == 80.0, "width>=800 → min_column_width=80")
-	grid.queue_free()
+	grid.free()
 
 func _test_grid_item_script_duck_typing() -> void:
 	var grid := ResponsiveGrid.new()
@@ -205,9 +210,4 @@ func _test_grid_item_script_duck_typing() -> void:
 	_cleanup(grid)
 
 func _assert(condition: bool, message: String) -> void:
-	if not condition:
-		push_error("FAIL: %s" % message)
-		OS.alert("FAIL: %s" % message)
-		quit(1)
-	else:
-		print("PASS: %s" % message)
+	_test.check(condition, message)

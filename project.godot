@@ -1,0 +1,12 @@
+[application]
+config/name="gd-responsive tests"
+
+[display]
+
+[display/window]
+size/viewport_width=960
+size/viewport_height=540
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
