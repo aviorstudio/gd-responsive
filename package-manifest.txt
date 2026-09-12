@@ -22,5 +22,7 @@ src/responsive_layout.gd.uid
 src/responsive_layout.tscn
 src/responsive_layout_config.gd
 src/responsive_layout_config.gd.uid
+src/responsive_layout_config_inspector.gd
+src/responsive_layout_config_inspector.gd.uid
 src/responsive_scale_module.gd
 src/responsive_scale_module.gd.uid

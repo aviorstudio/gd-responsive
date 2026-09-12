@@ -33,6 +33,8 @@ runs:
         test -f addon/src/responsive_layout.gd
         test -f addon/src/responsive_layout.tscn
         test -f addon/src/responsive_layout_config.gd
+        test -f addon/src/responsive_layout_config_inspector.gd
+        test -f addon/src/responsive_layout_config_inspector.gd.uid
         test -f addon/src/responsive_flex.gd
         test -f addon/src/responsive_flex_item.gd
         test -f addon/src/responsive_grid.gd

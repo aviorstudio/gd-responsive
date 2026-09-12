@@ -5,6 +5,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 "$SCRIPT_DIR/gate_self_test.sh"
 
 TESTS=(
+    tests/responsive_editor_test.gd
     tests/responsive_flex_test.gd
     tests/responsive_grid_test.gd
     tests/responsive_layout_test.gd
