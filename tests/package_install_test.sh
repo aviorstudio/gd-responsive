@@ -52,6 +52,7 @@ make_fixture() {
     mkdir -p "$fixture/addons/@aviorstudio_gd-responsive" "$fixture/tests"
     unzip -q "$ZIP_PATH" -d "$fixture/addons/@aviorstudio_gd-responsive"
     cp "$SCRIPT_DIR/editor_plugin_toggle.gd" "$fixture/tests/"
+    cp "$SCRIPT_DIR/editor_resource_validation.gd" "$fixture/tests/"
     cp "$SCRIPT_DIR/editor_wait.gd" "$fixture/tests/"
     cat > "$fixture/project.godot" <<'EOF'
 [display/window]
@@ -68,6 +69,7 @@ OWNED="$FIXTURE_ROOT/owned"
 make_fixture "$OWNED"
 PLUGIN_ACTION=enable run_editor "$OWNED" --script res://tests/editor_plugin_toggle.gd
 run_editor "$OWNED" --script res://tests/editor_wait.gd
+run_editor "$OWNED" --script res://tests/editor_resource_validation.gd
 python3 - "$OWNED/project.godot" <<'PY'
 import pathlib, sys
 text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8")
@@ -134,6 +136,8 @@ func _ready() -> void:
 	var module := ResponsiveScaleModule.new()
 	var device := module.resolve_device_type(Vector2(960, 540))
 	$Result.text = "GD Responsive Web Smoke PASS | device=%d | width=%.0f" % [device, module.calculate_content_width(960.0, 48, 320.0, 480.0)]
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("document.title = 'GD Responsive Web Smoke PASS | device=%d | width=480'" % device)
 EOF
     cat > "$CONSUMER/web/main.tscn" <<'EOF'
 [gd_scene load_steps=2 format=3]
