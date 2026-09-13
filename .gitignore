@@ -1,1 +1,4 @@
 .DS_Store
+.godot/
+dist/
+tests/*.gd.uid

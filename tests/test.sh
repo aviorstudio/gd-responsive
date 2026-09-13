@@ -1,17 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
-if [ -n "${GODOT_CMD:-}" ]; then
-    read -r -a GODOT <<< "$GODOT_CMD"
-else
-    GODOT=("${GODOT_BIN:-godot}")
-fi
-FAILURES=0
-for test in "$SCRIPT_DIR"/*_test.gd; do
-    echo "Running $(basename "$test")..."
-    if ! "${GODOT[@]}" --headless --path "$ROOT_DIR" --script "$test" 2>&1; then
-        FAILURES=$((FAILURES + 1))
-    fi
+
+"$SCRIPT_DIR/gate_self_test.sh"
+
+TESTS=(
+    tests/responsive_flex_test.gd
+    tests/responsive_grid_test.gd
+    tests/responsive_layout_test.gd
+    tests/responsive_package_test.gd
+    tests/responsive_scale_module_test.gd
+)
+
+for test in "${TESTS[@]}"; do
+    echo "Running ${test##*/}..."
+    "$SCRIPT_DIR/run_godot_test.sh" "$test"
 done
-exit $FAILURES
+
+echo "TEST_SUITE_PASS scripts=${#TESTS[@]}"

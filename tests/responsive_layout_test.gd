@@ -2,8 +2,10 @@ extends SceneTree
 
 const ResponsiveLayout = preload("res://addon/src/responsive_layout.gd")
 const ResponsiveLayoutConfig = preload("res://addon/src/responsive_layout_config.gd")
+const TestHarness = preload("res://tests/test_harness.gd")
 
 var _root: Window = null
+var _test := TestHarness.new()
 
 func _init() -> void:
 	call_deferred("_run")
@@ -13,7 +15,9 @@ func _run() -> void:
 	_test_config_resource_maps_to_scale_config()
 	_test_layout_reports_missing_paths()
 	_test_layout_uses_resource_config()
-	quit()
+	await process_frame
+	await process_frame
+	_test.finish(self)
 
 func _make_layout() -> ResponsiveLayout:
 	var layout: ResponsiveLayout = ResponsiveLayout.new()
@@ -60,7 +64,7 @@ func _test_layout_reports_missing_paths() -> void:
 	var warnings: PackedStringArray = layout._get_configuration_warnings()
 	_assert(warnings.size() == 4, "missing default child paths produce four warnings")
 	_assert(str(warnings[0]).contains("scroll_path"), "first warning names scroll_path")
-	layout.queue_free()
+	layout.free()
 
 func _test_layout_uses_resource_config() -> void:
 	_root.size = Vector2i(900, 1400)
@@ -88,11 +92,7 @@ func _test_layout_uses_resource_config() -> void:
 	config.max_content_width = 300.0
 	layout.refresh_layout()
 	_assert(is_equal_approx(content.custom_minimum_size.x, 300.0), "resource edits update layout width")
-	layout.queue_free()
+	layout.free()
 
 func _assert(condition: bool, message: String) -> void:
-	if not condition:
-		push_error("FAIL: %s" % message)
-		quit(1)
-	else:
-		print("PASS: %s" % message)
+	_test.check(condition, message)

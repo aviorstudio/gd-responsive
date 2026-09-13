@@ -2,8 +2,10 @@ extends SceneTree
 
 const ResponsiveFlex = preload("res://addon/src/responsive_flex.gd")
 const ResponsiveFlexItem = preload("res://addon/src/responsive_flex_item.gd")
+const TestHarness = preload("res://tests/test_harness.gd")
 
 var _root: Window = null
+var _test := TestHarness.new()
 
 func _init() -> void:
 	call_deferred("_run")
@@ -25,7 +27,9 @@ func _run() -> void:
 	_test_direction_breakpoints()
 	_test_gap_breakpoints()
 	_test_flex_item_script_duck_typing()
-	quit()
+	await process_frame
+	await process_frame
+	_test.finish(self)
 
 func _make_child(min_size: Vector2, grow: int = 0, align_self: int = -1) -> Control:
 	var c: Control = Control.new()
@@ -42,7 +46,7 @@ func _mount(flex: ResponsiveFlex, container_size: Vector2) -> void:
 	flex.notification(Container.NOTIFICATION_SORT_CHILDREN)
 
 func _cleanup(flex: ResponsiveFlex) -> void:
-	flex.queue_free()
+	flex.free()
 
 func _test_row_wrap_distributes_cards() -> void:
 	var flex := ResponsiveFlex.new()
@@ -150,7 +154,7 @@ func _test_zero_width_does_not_crash() -> void:
 	_root.add_child(flex)
 	flex.size = Vector2(0.0, 0.0)
 	flex.notification(Container.NOTIFICATION_SORT_CHILDREN)
-	_assert(true, "zero-width container should not crash")
+	_assert(flex.get_child_count() == 1 and is_equal_approx(flex.size.x, 0.0), "zero-width layout returns with its child and width intact")
 	_cleanup(flex)
 
 func _test_hidden_children_ignored() -> void:
@@ -224,7 +228,7 @@ func _test_static_helpers_set_and_get() -> void:
 	# Clamps negatives to 0
 	ResponsiveFlex.set_grow(c, -5)
 	_assert(ResponsiveFlex.get_grow(c) == 0, "negative grow clamped to 0")
-	c.queue_free()
+	c.free()
 
 func _test_direction_breakpoints() -> void:
 	var flex := ResponsiveFlex.new()
@@ -280,9 +284,4 @@ func _test_flex_item_script_duck_typing() -> void:
 	_cleanup(flex)
 
 func _assert(condition: bool, message: String) -> void:
-	if not condition:
-		push_error("FAIL: %s" % message)
-		OS.alert("FAIL: %s" % message)
-		quit(1)
-	else:
-		print("PASS: %s" % message)
+	_test.check(condition, message)

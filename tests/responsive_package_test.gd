@@ -1,5 +1,8 @@
 extends SceneTree
 
+const TestHarness = preload("res://tests/test_harness.gd")
+var _test := TestHarness.new()
+
 const REQUIRED_FILES: PackedStringArray = [
 	"res://addon/plugin.cfg",
 	"res://addon/plugin.gd",
@@ -35,7 +38,9 @@ func _run() -> void:
 	_test_required_package_files_exist()
 	_test_plugin_registers_custom_types()
 	_test_packaged_resources_load()
-	quit()
+	await process_frame
+	await process_frame
+	_test.finish(self)
 
 func _test_required_package_files_exist() -> void:
 	for path in REQUIRED_FILES:
@@ -58,16 +63,12 @@ func _test_packaged_resources_load() -> void:
 	_assert(layout_scene != null, "responsive layout scene loads")
 	var layout: Node = layout_scene.instantiate()
 	_assert(layout != null, "responsive layout scene instantiates")
-	layout.queue_free()
+	layout.free()
 	var example_scene: PackedScene = load("res://addon/examples/app_shell/responsive_example_main.tscn")
 	_assert(example_scene != null, "responsive app shell example loads")
 	var example: Node = example_scene.instantiate()
 	_assert(example != null, "responsive app shell example instantiates")
-	example.queue_free()
+	example.free()
 
 func _assert(condition: bool, message: String) -> void:
-	if not condition:
-		push_error("FAIL: %s" % message)
-		quit(1)
-	else:
-		print("PASS: %s" % message)
+	_test.check(condition, message)
