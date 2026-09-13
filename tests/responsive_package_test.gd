@@ -11,6 +11,8 @@ const REQUIRED_FILES: PackedStringArray = [
 	"res://addon/src/responsive_layout.gd",
 	"res://addon/src/responsive_layout.tscn",
 	"res://addon/src/responsive_layout_config.gd",
+	"res://addon/src/responsive_layout_config_inspector.gd",
+	"res://addon/src/responsive_layout_config_inspector.gd.uid",
 	"res://addon/src/responsive_flex.gd",
 	"res://addon/src/responsive_flex_item.gd",
 	"res://addon/src/responsive_grid.gd",

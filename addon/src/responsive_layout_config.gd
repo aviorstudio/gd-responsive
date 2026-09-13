@@ -45,7 +45,7 @@ const ResponsiveScaleModule = preload("responsive_scale_module.gd")
 
 @export var max_scale: float = 1.5:
 	set(value):
-		max_scale = maxf(value, min_scale)
+		max_scale = maxf(value, 0.01)
 		emit_changed()
 
 @export var scale_change_threshold: float = 0.01:
@@ -62,7 +62,7 @@ const ResponsiveScaleModule = preload("responsive_scale_module.gd")
 
 @export var tablet_breakpoint: int = 1024:
 	set(value):
-		tablet_breakpoint = maxi(value, mobile_breakpoint + 1)
+		tablet_breakpoint = maxi(value, 1)
 		emit_changed()
 
 @export var mobile_margin: int = 24:
@@ -101,6 +101,17 @@ const ResponsiveScaleModule = preload("responsive_scale_module.gd")
 	set(value):
 		subheader_font_size = maxi(value, 1)
 		emit_changed()
+
+## Returns cross-field authoring problems without rewriting artist values.
+func get_validation_warnings() -> PackedStringArray:
+	var warnings := PackedStringArray()
+	if min_content_width > max_content_width:
+		warnings.append("min_content_width (%s) must not exceed max_content_width (%s)." % [min_content_width, max_content_width])
+	if min_scale > max_scale:
+		warnings.append("min_scale (%s) must not exceed max_scale (%s)." % [min_scale, max_scale])
+	if mobile_breakpoint >= tablet_breakpoint:
+		warnings.append("mobile_breakpoint (%d) must be less than tablet_breakpoint (%d)." % [mobile_breakpoint, tablet_breakpoint])
+	return warnings
 
 func to_scale_config() -> ResponsiveScaleModule.ResponsiveConfig:
 	var config: ResponsiveScaleModule.ResponsiveConfig = ResponsiveScaleModule.ResponsiveConfig.new()
