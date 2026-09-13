@@ -43,12 +43,12 @@ runs:
         test -f addon/examples/app_shell/responsive_example_main.tscn
         test -f addon/examples/app_shell/responsive_example_main.gd
 
-    # Godot comes from a LOCAL action, copied from the one castledrop and prizm
-    # carry. The version used to be a download URL written into ci.yml -- the
-    # engine this addon is tested against lived in workflow YAML.
+    # Correction (fieldsofrevik#151): the previous action selected Godot 4.4.1
+    # without checking downloaded bytes. The supported gate is checksummed
+    # Godot 4.7.2, including its web export templates.
     - uses: ./.github/actions/setup-godot
       with:
-        godot-version: '4.4.1'
+        install-templates: 'true'
 
     # No `if: hashFiles(...)` guard. This step used to skip itself when
     # tests/test.sh was absent, which is indistinguishable from the script being
@@ -57,3 +57,10 @@ runs:
     - name: Godot tests
       shell: bash
       run: ./tests/test.sh
+
+    - name: Build and verify exact release package
+      shell: bash
+      run: |
+        ./scripts/package_addon.sh
+        ./scripts/verify_package.sh
+        ./tests/package_install_test.sh

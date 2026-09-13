@@ -1,6 +1,8 @@
 extends SceneTree
 
 const ResponsiveScaleModule = preload("res://addon/src/responsive_scale_module.gd")
+const TestHarness = preload("res://tests/test_harness.gd")
+var _test := TestHarness.new()
 
 func _init() -> void:
 	call_deferred("_run")
@@ -9,7 +11,7 @@ func _run() -> void:
 	_test_compute_scale()
 	_test_resolve_device_type_and_margin()
 	_test_calculate_content_width()
-	quit()
+	_test.finish(self)
 
 func _test_compute_scale() -> void:
 	var module: ResponsiveScaleModule = ResponsiveScaleModule.new()
@@ -58,7 +60,4 @@ func _test_calculate_content_width() -> void:
 	_assert(width_mid == 480.0, "content width should clamp to max when available width exceeds max")
 
 func _assert(condition: bool, message: String) -> void:
-	if condition:
-		return
-	push_error(message)
-	quit(1)
+	_test.check(condition, message)
