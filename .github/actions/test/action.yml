@@ -19,32 +19,6 @@ description: >
 runs:
   using: composite
   steps:
-    # The addon's own file manifest. Listed rather than globbed: a file dropped
-    # in a refactor is exactly what this catches, and a glob would happily match
-    # whatever was left.
-    - name: Validate addon package
-      shell: bash
-      run: |
-        set -euo pipefail
-        test -f addon/plugin.cfg
-        test -f addon/plugin.gd
-        test -f addon/autoload.gd
-        test -f addon/src/responsive_scale_module.gd
-        test -f addon/src/responsive_layout.gd
-        test -f addon/src/responsive_layout.tscn
-        test -f addon/src/responsive_layout_config.gd
-        test -f addon/src/responsive_layout_config_inspector.gd
-        test -f addon/src/responsive_layout_config_inspector.gd.uid
-        test -f addon/src/responsive_flex.gd
-        test -f addon/src/responsive_flex_item.gd
-        test -f addon/src/responsive_grid.gd
-        test -f addon/src/responsive_grid_item.gd
-        test -f addon/config/default_responsive_layout_config.tres
-        test -f addon/presets/compact_layout_config.tres
-        test -f addon/presets/app_shell_layout_config.tres
-        test -f addon/examples/app_shell/responsive_example_main.tscn
-        test -f addon/examples/app_shell/responsive_example_main.gd
-
     # Correction (fieldsofrevik#151): the previous action selected Godot 4.4.1
     # without checking downloaded bytes. The supported gate is checksummed
     # Godot 4.7.2, including its web export templates.
@@ -52,17 +26,6 @@ runs:
       with:
         install-templates: 'true'
 
-    # No `if: hashFiles(...)` guard. This step used to skip itself when
-    # tests/test.sh was absent, which is indistinguishable from the script being
-    # renamed or deleted -- a skipped test is a green tick. This addon has a
-    # suite, so the step runs unconditionally and a missing script now fails.
-    - name: Godot tests
+    - name: Run addon profile gates
       shell: bash
-      run: ./tests/test.sh
-
-    - name: Build and verify exact release package
-      shell: bash
-      run: |
-        ./scripts/package_addon.sh
-        ./scripts/verify_package.sh
-        ./tests/package_install_test.sh
+      run: make check
