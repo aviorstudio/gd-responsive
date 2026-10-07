@@ -19,7 +19,7 @@ concurrency: release-${{ github.repository }}
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     permissions:
       contents: write
     # Bounded, so a step that hangs fails here rather than sitting until the
