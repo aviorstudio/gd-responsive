@@ -1,56 +1,22 @@
-name: 'Setup checksummed Godot 4.7.2'
-description: 'Install the supported Godot editor and export templates after SHA-256 verification'
+name: Setup checksummed Godot 4.7.2
+description: Install pinned engine and templates through released shared setup
 inputs:
   install-templates:
-    description: 'Whether to install export templates'
+    description: Whether to install export templates
     required: false
     default: 'false'
-
 runs:
-  using: 'composite'
+  using: composite
   steps:
-    - name: Cache Godot binary
-      id: cache-godot
-      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-      with:
-        path: /usr/local/bin/godot
-        key: godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-${{ runner.os }}
-
-    - name: Install Godot
-      if: steps.cache-godot.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        archive=Godot_v4.7.2-stable_linux.x86_64.zip
-        curl -fL --retry 3 -o "$archive" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/$archive"
-        printf '%s  %s\n' 'cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4' "$archive" | sha256sum -c -
-        unzip -q "$archive"
-        chmod +x Godot_v4.7.2-stable_linux.x86_64
-        sudo mv Godot_v4.7.2-stable_linux.x86_64 /usr/local/bin/godot
-
-    - name: Verify Godot installation
-      shell: bash
-      run: test "$(godot --version)" = "4.7.2.stable.official.ed1daf0bf"
-
-    - name: Cache Godot export templates
-      if: inputs.install-templates == 'true'
-      id: cache-godot-templates
-      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-      with:
-        path: ~/.local/share/godot/export_templates/4.7.2.stable
-        key: godot-templates-4.7.2-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011-${{ runner.os }}
-
-    - name: Install Godot export templates
-      if: inputs.install-templates == 'true' && steps.cache-godot-templates.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        archive=Godot_v4.7.2-stable_export_templates.tpz
-        curl -fL --retry 3 -o "$archive" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/$archive"
-        printf '%s  %s\n' 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011' "$archive" | sha256sum -c -
-        unzip -q "$archive"
-        mkdir -p ~/.local/share/godot/export_templates/4.7.2.stable
-        mv templates/* ~/.local/share/godot/export_templates/4.7.2.stable/
-
-    - name: Verify Godot templates
-      if: inputs.install-templates == 'true'
-      shell: bash
-      run: test -s ~/.local/share/godot/export_templates/4.7.2.stable/web_release.zip
+  - uses: nicodes/tools/godot-setup@cf0e560c9bbb888488191fcce03409b6c6fbdc28
+    with:
+      version: 4.7.2
+      origin: godot
+      binary-checksum: sha256:cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4
+      templates-checksum: sha256:f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
+      install-templates: ${{ inputs.install-templates }}
+      expected-version: 4.7.2.stable.official.ed1daf0bf
+  - name: Verify required web template
+    if: inputs.install-templates == 'true'
+    shell: bash
+    run: test -s "$HOME/.local/share/godot/export_templates/4.7.2.stable/web_release.zip"
