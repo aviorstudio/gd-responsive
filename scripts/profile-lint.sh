@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+test -f addon/plugin.cfg
+test -f addon/plugin.gd
+test -f addon/autoload.gd
+test -f addon/src/responsive_scale_module.gd
+test -f addon/src/responsive_layout.gd
+test -f addon/src/responsive_layout.tscn
+test -f addon/src/responsive_layout_config.gd
+test -f addon/src/responsive_layout_config_inspector.gd
+test -f addon/src/responsive_layout_config_inspector.gd.uid
+test -f addon/src/responsive_flex.gd
+test -f addon/src/responsive_flex_item.gd
+test -f addon/src/responsive_grid.gd
+test -f addon/src/responsive_grid_item.gd
+test -f addon/config/default_responsive_layout_config.tres
+test -f addon/presets/compact_layout_config.tres
+test -f addon/presets/app_shell_layout_config.tres
+test -f addon/examples/app_shell/responsive_example_main.tscn
+test -f addon/examples/app_shell/responsive_example_main.gd
