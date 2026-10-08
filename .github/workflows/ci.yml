@@ -39,3 +39,5 @@ jobs:
 
       - name: Test
         uses: ./.github/actions/test
+
+# Temporary PR concurrency probe 2; this branch is closed after real CI verification.
