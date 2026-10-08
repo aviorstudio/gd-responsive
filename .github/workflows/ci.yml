@@ -44,3 +44,4 @@ jobs:
 # Follow-up supersedes only this PR; the independent probe must continue.
 # Second follow-up while the first follow-up CI is still running.
 # start observed live cancellation probe
+# supersede observed running CI immediately
