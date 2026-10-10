@@ -84,16 +84,10 @@ jobs:
           sha256sum dist/@aviorstudio_gd-responsive.zip
           echo "sha256=$(sha256sum dist/@aviorstudio_gd-responsive.zip | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
 
-      - name: Install GDAM
-        uses: aviorstudio/gdam-actions/install@699727af05ff8da8f6816cc5c14a16b2b9470219 # v0.2.0
-        with:
-          version: v0.0.8
-          archive-sha256: 7ef2a325ad1416ce850a332f4380b1b290bd7a56e2a20f544536386cf64abb92
-
       - name: Publish the exact tested addon
-        uses: aviorstudio/gdam-actions/release@699727af05ff8da8f6816cc5c14a16b2b9470219 # v0.2.0
+        uses: aviorstudio/gdam-actions/release@6677226d9353df1d410f3e7f5075e13b3b7d5308 # v0.5.1
         with:
           tag: ${{ steps.release.outputs.tag }}
           asset: dist/@aviorstudio_gd-responsive.zip
           tested-sha256: ${{ steps.package.outputs.sha256 }}
-          secret-key: ${{ secrets.GDAM_SECRET_KEY }}
+          api-key: ${{ secrets.GDAM_API_KEY }}
