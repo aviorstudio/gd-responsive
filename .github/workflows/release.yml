@@ -19,6 +19,7 @@ concurrency: release-${{ github.repository }}
 
 jobs:
   release:
+    name: "Release"
     runs-on: blacksmith-2vcpu-ubuntu-2404
     permissions:
       contents: write
@@ -26,7 +27,8 @@ jobs:
     # runner's own timeout hours later.
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: "Check out source"
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
@@ -84,7 +86,7 @@ jobs:
           sha256sum dist/@aviorstudio_gd-responsive.zip
           echo "sha256=$(sha256sum dist/@aviorstudio_gd-responsive.zip | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
 
-      - name: Publish the exact tested addon
+      - name: "Publish verified addon release"
         uses: aviorstudio/gdam-actions/release@6677226d9353df1d410f3e7f5075e13b3b7d5308 # v0.5.1
         with:
           tag: ${{ steps.release.outputs.tag }}
