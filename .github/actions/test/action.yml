@@ -22,7 +22,8 @@ runs:
     # Correction (fieldsofrevik#151): the previous action selected Godot 4.4.1
     # without checking downloaded bytes. The supported gate is checksummed
     # Godot 4.7.2, including its web export templates.
-    - uses: ./.github/actions/setup-godot
+    - name: "Set up Godot"
+      uses: ./.github/actions/setup-godot
       with:
         install-templates: 'true'
 
