@@ -4,3 +4,7 @@
 dist/
 tests/*.gd.uid
 .artifacts/
+
+.komizo.mise*.toml
+
+.komizo.mise*.lock
