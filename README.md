@@ -1,4 +1,4 @@
-<!-- Generated from private documentation source. Do not edit directly. Source SHA256: 0bebe3e60d8034da8e66b8fa3acbed10e91c939cd277c23f168f266650f61be8 -->
+<!-- Generated from private documentation source. Do not edit directly. Source SHA256: 8a6bc838507929b9515d8505e6e0bda9c92255832db408c0458b9a1ab51d818a -->
 
 # gd-responsive
 
@@ -106,7 +106,7 @@ See `LICENSE`.
 
 ## Repository development
 
-Install the [Komizo release](https://github.com/nicodes/komizo#install) matching `komizo.lock`.
+Install the [komizo release](https://github.com/nicodes/komizo#install) matching `komizo.lock`.
 
 ```sh
 komizo check                 # Source, runtime, package and installed-addon checks
