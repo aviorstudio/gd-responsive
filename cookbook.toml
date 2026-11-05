@@ -1,0 +1,71 @@
+version = 1
+recipe = "godot-addon"
+
+[package]
+source = "addon"
+manifest = "package-manifest.txt"
+archive = "dist/@aviorstudio_gd-responsive.zip"
+
+[[components.fixture_exports]]
+project = "tests/package/web"
+preset = "Web"
+output = "dist/installed-web/index.html"
+timeout = 120
+import_timeout = 30
+required_outputs = ["index.html", "index.js", "index.wasm", "index.pck"]
+install_archive = "addons/@aviorstudio_gd-responsive"
+
+[lint]
+required_paths = ["addon/plugin.cfg", "addon/plugin.gd", "addon/autoload.gd", "addon/src/responsive_scale_module.gd", "addon/src/responsive_layout.gd", "addon/src/responsive_layout.tscn", "addon/src/responsive_layout_config.gd", "addon/src/responsive_layout_config_inspector.gd", "addon/src/responsive_layout_config_inspector.gd.uid", "addon/src/responsive_flex.gd", "addon/src/responsive_flex_item.gd", "addon/src/responsive_grid.gd", "addon/src/responsive_grid_item.gd", "addon/config/default_responsive_layout_config.tres", "addon/presets/compact_layout_config.tres", "addon/presets/app_shell_layout_config.tres", "addon/examples/app_shell/responsive_example_main.tscn", "addon/examples/app_shell/responsive_example_main.gd", "package-manifest.txt"]
+
+[format]
+paths = ["addon", "tests/editor_plugin_toggle.gd", "tests/editor_resource_validation.gd", "tests/editor_wait.gd", "tests/gate_fixture.gd", "tests/responsive_editor_test.gd", "tests/responsive_flex_test.gd", "tests/responsive_grid_test.gd", "tests/responsive_layout_test.gd", "tests/responsive_package_test.gd", "tests/responsive_scale_module_test.gd", "tests/test_harness.gd", "tests/package/web"]
+
+[clean]
+paths = ["dist", ".artifacts/build", ".artifacts/godot", ".artifacts/godot-data", ".artifacts/godot-config", ".artifacts/tmp", ".artifacts/verification", ".godot"]
+
+[publication]
+mode = "bump"
+validation_timeout = 20
+publish_timeout = 10
+tag_prefix = "v"
+initial = "first"
+
+[[tests.unit]]
+runner = "python"
+path = "tests/test_runner_controls.py"
+timeout = 120
+[[tests.unit]]
+runner = "godot"
+path = "tests/responsive_editor_test.gd"
+timeout = 30
+policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$", editor = true, allow_errors = ["^ERROR: [0-9]+ RID allocations of type '(?:N16RendererViewport8ViewportE|PN13RendererDummy14TextureStorage12DummyTextureE|N17RendererSceneCull8ScenarioE|PN18TextServerAdvanced22ShapedTextDataAdvancedE|PN18TextServerAdvanced12FontAdvancedE)' were leaked at exit\\.$"], allow_error_version = "4.7.2" }
+[[tests.unit]]
+runner = "godot"
+path = "tests/responsive_flex_test.gd"
+timeout = 30
+policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
+[[tests.unit]]
+runner = "godot"
+path = "tests/responsive_grid_test.gd"
+timeout = 30
+policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
+[[tests.unit]]
+runner = "godot"
+path = "tests/responsive_layout_test.gd"
+timeout = 30
+policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
+[[tests.unit]]
+runner = "godot"
+path = "tests/responsive_package_test.gd"
+timeout = 30
+policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
+[[tests.unit]]
+runner = "godot"
+path = "tests/responsive_scale_module_test.gd"
+timeout = 30
+policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
+[[tests.integration]]
+runner = "bash"
+path = "tests/package_install_test.sh"
+timeout = 600
