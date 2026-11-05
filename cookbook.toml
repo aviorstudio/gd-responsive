@@ -69,3 +69,6 @@ policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=
 runner = "bash"
 path = "tests/package_install_test.sh"
 timeout = 600
+
+[ci]
+timeout_minutes = 30
