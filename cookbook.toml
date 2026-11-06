@@ -42,33 +42,16 @@ timeout = 30
 policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$", editor = true, allow_errors = ["^ERROR: [0-9]+ RID allocations of type '(?:N16RendererViewport8ViewportE|PN13RendererDummy14TextureStorage12DummyTextureE|N17RendererSceneCull8ScenarioE|PN18TextServerAdvanced22ShapedTextDataAdvancedE|PN18TextServerAdvanced12FontAdvancedE)' were leaked at exit\\.$"], allow_error_version = "4.7.2" }
 [[tests.unit]]
 runner = "godot"
-path = "tests/responsive_flex_test.gd"
 timeout = 30
-policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
-[[tests.unit]]
-runner = "godot"
-path = "tests/responsive_grid_test.gd"
-timeout = 30
-policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
-[[tests.unit]]
-runner = "godot"
-path = "tests/responsive_layout_test.gd"
-timeout = 30
-policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
-[[tests.unit]]
-runner = "godot"
-path = "tests/responsive_package_test.gd"
-timeout = 30
-policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
-[[tests.unit]]
-runner = "godot"
-path = "tests/responsive_scale_module_test.gd"
-timeout = 30
-policy = { sentinel_regex = "^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$" }
+policy = {sentinel_regex="^GDTEST_SENTINEL assertions=([1-9][0-9]*) failures=0$"}
+cases = [
+  {path="tests/responsive_flex_test.gd"},
+  {path="tests/responsive_grid_test.gd"},
+  {path="tests/responsive_layout_test.gd"},
+  {path="tests/responsive_package_test.gd"},
+  {path="tests/responsive_scale_module_test.gd"},
+]
 [[tests.integration]]
 runner = "bash"
 path = "tests/package_install_test.sh"
 timeout = 600
-
-[ci]
-timeout_minutes = 30
