@@ -2,8 +2,6 @@ version = 1
 recipe = "godot-addon"
 
 [package]
-source = "addon"
-manifest = "package-manifest.txt"
 archive = "dist/@aviorstudio_gd-responsive.zip"
 
 [[components.fixture_exports]]
@@ -16,7 +14,7 @@ required_outputs = ["index.html", "index.js", "index.wasm", "index.pck"]
 install_archive = "addons/@aviorstudio_gd-responsive"
 
 [lint]
-required_paths = ["addon/plugin.cfg", "addon/plugin.gd", "addon/autoload.gd", "addon/src/responsive_scale_module.gd", "addon/src/responsive_layout.gd", "addon/src/responsive_layout.tscn", "addon/src/responsive_layout_config.gd", "addon/src/responsive_layout_config_inspector.gd", "addon/src/responsive_layout_config_inspector.gd.uid", "addon/src/responsive_flex.gd", "addon/src/responsive_flex_item.gd", "addon/src/responsive_grid.gd", "addon/src/responsive_grid_item.gd", "addon/config/default_responsive_layout_config.tres", "addon/presets/compact_layout_config.tres", "addon/presets/app_shell_layout_config.tres", "addon/examples/app_shell/responsive_example_main.tscn", "addon/examples/app_shell/responsive_example_main.gd", "package-manifest.txt"]
+required_paths = ["addon/plugin.cfg", "addon/plugin.gd", "addon/autoload.gd", "addon/src/responsive_scale_module.gd", "addon/src/responsive_layout.gd", "addon/src/responsive_layout.tscn", "addon/src/responsive_layout_config.gd", "addon/src/responsive_layout_config_inspector.gd", "addon/src/responsive_layout_config_inspector.gd.uid", "addon/src/responsive_flex.gd", "addon/src/responsive_flex_item.gd", "addon/src/responsive_grid.gd", "addon/src/responsive_grid_item.gd", "addon/config/default_responsive_layout_config.tres", "addon/presets/compact_layout_config.tres", "addon/presets/app_shell_layout_config.tres", "addon/examples/app_shell/responsive_example_main.tscn", "addon/examples/app_shell/responsive_example_main.gd", "package.files"]
 
 [format]
 paths = ["addon", "tests/editor_plugin_toggle.gd", "tests/editor_resource_validation.gd", "tests/editor_wait.gd", "tests/gate_fixture.gd", "tests/responsive_editor_test.gd", "tests/responsive_flex_test.gd", "tests/responsive_grid_test.gd", "tests/responsive_layout_test.gd", "tests/responsive_package_test.gd", "tests/responsive_scale_module_test.gd", "tests/test_harness.gd", "tests/package/web"]
