@@ -1,4 +1,4 @@
-<!-- Generated from private documentation source. Do not edit directly. Source SHA256: 3ad6f07881eaf73065cac304f888c115b4e14e9bb0a572d4589e098b2d636826 -->
+<!-- Generated from private documentation source. Do not edit directly. Source SHA256: f53c5a2547fb1f52dfcd73632723e560495af9a6e2571f1ad735ea3f14a6b965 -->
 
 # gd-responsive
 
@@ -109,11 +109,11 @@ See `LICENSE`.
 Install [mise](https://mise.jdx.dev/), then use the pinned cookbook entrypoint:
 
 ```sh
-make setup
-make build
-make test
+mise run setup
+mise run build
+mise run test
 ```
 
-`mise.toml` pins SDK versions and reviewed engine/template checksums. `cookbook.toml` declares native package inputs, fixture exports and test groups; `Makefile` loads the exact shared cookbook revision. `make build` packages and validates the closed addon payload and exports its installed Web fixture. Tests use those existing artifacts and never build or install dependencies.
+`mise.toml` pins SDK versions and reviewed engine/template checksums. `cookbook.toml` declares native package inputs, fixture exports and test groups; the generated `mise.toml` task block loads the exact shared cookbook revision. `mise run build` packages and validates the closed addon payload and exports its installed Web fixture. Tests use those existing artifacts and never build or install dependencies.
 
-Use `make test:lint`, `make test:unit`, `make test:integration` and `make test:security` for individual groups. The unit suite retains the native assertion reach and failure controls; integration covers installed editor lifecycle and consumer autoload ownership. `make fmt` formats native GDScript, `make clean` removes declared generated outputs, and `make help` describes the supported commands. Build and test receipts remain in `.artifacts/verification`.
+Use `mise run test:lint`, `mise run test:unit`, `mise run test:integration` and `mise run test:security` for individual groups. The unit suite retains the native assertion reach and failure controls; integration covers installed editor lifecycle and consumer autoload ownership. `mise run fmt` formats native GDScript, `mise run clean` removes declared generated outputs, and `mise run help` describes the supported commands. Build and test receipts remain in `.artifacts/verification`.
